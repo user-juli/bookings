@@ -1,8 +1,23 @@
 import express from "express";
-import { PORT, mongoDBURL } from "./config.js";
+import mongoose from "mongoose";
+//import { PORT, mongoDBURL } from "./config.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
-app.listen(PORT, () => {
-  console.log(`App is listening to port: ${PORT}`);
-});
+const PORT = process.env.APP_PORT;
+const mongoDBURL = process.env.mongoDBURL;
+
+mongoose
+  .connect(mongoDBURL)
+  .then(() => {
+    console.log('App connected to database');
+    app.listen(PORT, () => {
+      console.log(`App is listening to port: ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  })
